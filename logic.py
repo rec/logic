@@ -159,15 +159,13 @@ def build_terms(nouns: list[str], adjectives: list[str]) -> list[str]:
 
 def make_chain(terms: list[str], useful_count: int, rng: random.Random) -> tuple[list[Statement], Statement]:
     chosen = rng.sample(terms, useful_count + 1)
-    negative_at = rng.randrange(useful_count)
     statements: list[Statement] = []
 
     for index in range(useful_count):
-        relation = "no" if index == negative_at else "all"
+        relation = "no" if index == useful_count - 1 else "all"
         statements.append(Statement(chosen[index], chosen[index + 1], relation))
 
-    conclusion_relation = "no" if any(statement.relation == "no" for statement in statements) else "all"
-    conclusion = Statement(chosen[0], chosen[-1], conclusion_relation)
+    conclusion = Statement(chosen[0], chosen[-1], "no")
     return statements, conclusion
 
 

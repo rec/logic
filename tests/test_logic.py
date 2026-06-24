@@ -70,6 +70,15 @@ class LogicTests(unittest.TestCase):
         self.assertEqual(len(nouns), 4)
         self.assertEqual(len(adjectives), 4)
 
+    def test_negative_statement_ends_useful_chain(self) -> None:
+        terms = ["a", "b", "c", "d"]
+        statements, conclusion = logic.make_chain(terms, 3, random.Random(0))
+
+        self.assertEqual([statement.relation for statement in statements], ["all", "all", "no"])
+        self.assertEqual(conclusion.relation, "no")
+        self.assertEqual(conclusion.subject, statements[0].subject)
+        self.assertEqual(conclusion.predicate, statements[-1].predicate)
+
 
 if __name__ == "__main__":
     unittest.main()
