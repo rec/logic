@@ -271,13 +271,13 @@ def parser() -> argparse.ArgumentParser:
     argument_parser.add_argument(
         "--useful",
         type=int,
-        required=True,
+        default=14,
         help="Number of useful statements in the puzzle.",
     )
     argument_parser.add_argument(
         "--decoy",
         type=int,
-        default=0,
+        default=3,
         help="Number of unrelated decoy statements.",
     )
     argument_parser.add_argument(

@@ -103,6 +103,12 @@ class LogicTests(unittest.TestCase):
 
         self.assertIn("Read atomically.\n\nPremises:", output.getvalue())
 
+    def test_parser_defaults_to_fourteen_useful_and_three_decoys(self) -> None:
+        args = logic.parser().parse_args([])
+
+        self.assertEqual(args.useful, 14)
+        self.assertEqual(args.decoy, 3)
+
 
 if __name__ == "__main__":
     unittest.main()
