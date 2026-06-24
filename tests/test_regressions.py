@@ -79,7 +79,7 @@ def test_twenty_three_statements_five_decoys(file_regression: FileRegressionFixt
     file_regression.check(render_puzzle(23, 5), extension=".txt")
 
 
-def test_random_names(file_regression: FileRegressionFixture) -> None:
+def test_random_words(file_regression: FileRegressionFixture) -> None:
     rng = random.Random(8675309)
-    names = [logic.random_name(5, 8, rng) for _ in range(20)]
-    file_regression.check("\n".join(names) + "\n", extension=".txt")
+    words = [logic.random_word(5, 8, rng) for _ in range(20)]
+    file_regression.check("\n".join(words) + "\n", extension=".txt")

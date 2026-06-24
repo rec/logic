@@ -78,7 +78,7 @@ CODAS = [
 ]
 
 
-def random_name(min_syllables: int, max_syllables: int, rng: random.Random) -> str:
+def random_word(min_syllables: int, max_syllables: int, rng: random.Random) -> str:
     if min_syllables < 1:
         raise ValueError("min_syllables must be at least 1.")
     if max_syllables < min_syllables:
@@ -88,7 +88,7 @@ def random_name(min_syllables: int, max_syllables: int, rng: random.Random) -> s
         f"{rng.choice(ONSETS)}{rng.choice(NUCLEI)}{rng.choice(CODAS)}"
         for _ in range(rng.randint(min_syllables, max_syllables))
     ]
-    return "".join(syllables).capitalize()
+    return "".join(syllables)
 
 
 def string_list(data: object, key: str) -> list[str]:
