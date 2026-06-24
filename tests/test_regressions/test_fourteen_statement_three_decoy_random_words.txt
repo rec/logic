@@ -1,0 +1,24 @@
+The Game of Logic
+
+Premises:
+1. No kinflaishurbes ripeemlumzees are kinflaishurbes wisshamail.
+2. All flesbusfloartoaprool wisshamail are boalbalbungil wudoosworee.
+3. All boalbalbungil ripeemlumzees are kinflaishurbes wudoosworee.
+4. All goardabreem ferdeelglusdoarku are flesbusfloartoaprool wudoosworee.
+5. All flesbusfloartoaprool ripeemlumzees are goardabreem wisshamail.
+6. All kinflaishurbes wudoosworee are flesbusfloartoaprool wisshamail.
+7. All flesbusfloartoaprool wisshamail are boalbalbungil wisshamail.
+8. All kinflaishurbes wisshamail are boalbalbungil ripeemlumzees.
+9. All boalbalbungil wisshamail are boalbalbungil ferdeelglusdoarku.
+10. All flesbusfloartoaprool wudoosworee are kinflaishurbes ferdeelglusdoarku.
+11. All kinflaishurbes ferdeelglusdoarku are wudoosworee.
+12. No flesbusfloartoaprool ripeemlumzees are wisshamail.
+13. All wudoosworee are flesbusfloartoaprool ripeemlumzees.
+14. All boalbalbungil wudoosworee are kinflaishurbes ripeemlumzees.
+15. All goardabreem wudoosworee are boalbalbungil wudoosworee.
+16. All goardabreem ferdeelglusdoarku are flesbusfloartoaprool wisshamail.
+17. All boalbalbungil ferdeelglusdoarku are goardabreem ferdeelglusdoarku.
+
+What follows?
+
+Answer: No goardabreem wudoosworee are goardabreem wisshamail.

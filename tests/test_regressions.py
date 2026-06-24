@@ -103,5 +103,5 @@ def test_random_words(file_regression: FileRegressionFixture) -> None:
     file_regression.check("\n".join(words) + "\n", extension=".txt")
 
 
-def test_seventeen_statement_random_words(file_regression: FileRegressionFixture) -> None:
-    file_regression.check(render_random_puzzle(17, 0), extension=".txt")
+def test_fourteen_statement_three_decoy_random_words(file_regression: FileRegressionFixture) -> None:
+    file_regression.check(render_random_puzzle(14, 3), extension=".txt")
