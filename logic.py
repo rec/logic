@@ -27,6 +27,7 @@ class Statement:
 class Puzzle:
     statements: list[Statement]
     conclusion: Statement
+    prompt: str
 
 
 ONSETS = [
@@ -151,6 +152,14 @@ def terms_from_args(args: argparse.Namespace) -> tuple[list[str], list[str]]:
     return nouns, adjectives
 
 
+def default_prompt(nouns: list[str], adjectives: list[str]) -> str:
+    example = f"{adjectives[0]} {nouns[0]}"
+    return (
+        "Treat each two-word phrase as a single, atomic variable "
+        f"(e.g., treat {example!r} as an indivisible token, not an intersection of two terms)."
+    )
+
+
 def build_terms(nouns: list[str], adjectives: list[str]) -> list[str]:
     terms = list(nouns)
     terms.extend(f"{adjective} {noun}" for adjective, noun in product(adjectives, nouns))
@@ -195,6 +204,7 @@ def make_puzzle(
     useful_count: int,
     decoy_count: int,
     seed: int | None,
+    prompt: str = "",
 ) -> Puzzle:
     terms = build_terms(nouns, adjectives)
     required_terms = useful_count + 1
@@ -209,12 +219,15 @@ def make_puzzle(
 
     statements = [*useful, *decoys]
     rng.shuffle(statements)
-    return Puzzle(statements, conclusion)
+    return Puzzle(statements, conclusion, prompt)
 
 
 def print_puzzle(puzzle: Puzzle) -> None:
     print("The Game of Logic")
     print()
+    if puzzle.prompt:
+        print(puzzle.prompt)
+        print()
     print("Premises:")
     for index, statement in enumerate(puzzle.statements, start=1):
         print(f"{index}. {statement.text()}")
@@ -272,6 +285,11 @@ def parser() -> argparse.ArgumentParser:
         type=int,
         help="Random seed.",
     )
+    argument_parser.add_argument(
+        "--prompt",
+        default="",
+        help="Prompt text to print before the puzzle.",
+    )
     return argument_parser
 
 
@@ -296,7 +314,8 @@ def main() -> None:
         raise SystemExit("At least one noun is required.")
     if not adjectives:
         raise SystemExit("At least one adjectival phrase is required.")
-    puzzle = make_puzzle(nouns, adjectives, args.useful, args.decoy, args.seed)
+    prompt = args.prompt or default_prompt(nouns, adjectives)
+    puzzle = make_puzzle(nouns, adjectives, args.useful, args.decoy, args.seed, prompt)
     print_puzzle(puzzle)
 
 

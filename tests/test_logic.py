@@ -1,7 +1,9 @@
 import argparse
+import io
 import random
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 
 import logic
@@ -78,6 +80,28 @@ class LogicTests(unittest.TestCase):
         self.assertEqual(conclusion.relation, "no")
         self.assertEqual(conclusion.subject, statements[0].subject)
         self.assertEqual(conclusion.predicate, statements[-1].predicate)
+
+    def test_default_prompt_uses_first_generated_phrase(self) -> None:
+        prompt = logic.default_prompt(["hatter"], ["mad"])
+
+        self.assertEqual(
+            prompt,
+            "Treat each two-word phrase as a single, atomic variable "
+            "(e.g., treat 'mad hatter' as an indivisible token, not an intersection of two terms).",
+        )
+
+    def test_print_puzzle_includes_prompt(self) -> None:
+        puzzle = logic.Puzzle(
+            [logic.Statement("a", "b", "all")],
+            logic.Statement("a", "b", "all"),
+            "Read atomically.",
+        )
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            logic.print_puzzle(puzzle)
+
+        self.assertIn("Read atomically.\n\nPremises:", output.getvalue())
 
 
 if __name__ == "__main__":
