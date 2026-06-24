@@ -1,0 +1,35 @@
+The Game of Logic
+
+Premises:
+1. All peppery Dormice are tiny Knaves of Hearts.
+2. All sleepy Dodos are grinning Lories.
+3. All weeping Cheshire Cats are sleepy Cookmaids.
+4. All royal Eaglets are late Queens of Hearts.
+5. All grinning Lories are late Bill the Lizards.
+6. All tiny Gryphons are curious Alice.
+7. All curious Kings of Hearts are weeping Lories.
+8. All Mad Hatters are enormous Lories.
+9. All royal Gryphons are sleepy Dodos.
+10. All weeping Lories are vanishing Caterpillars.
+11. All croquet-playing Alice are peppery Dormice.
+12. All vanishing Mock Turtles are curious Duchesses.
+13. No enormous Mock Turtles are vanishing Mad Hatters.
+14. No vanishing Dormice are grinning Footmen.
+15. No late Queens of Hearts are vanishing Lories.
+16. All grinning March Hares are curious Gryphons.
+17. All tiny Knaves of Hearts are curious Kings of Hearts.
+18. All curious Alice are curious Cookmaids.
+19. All grinning Cards are late Footmen.
+20. All vanishing Caterpillars are Mad Hatters.
+21. All grinning Cookmaids are weeping Cheshire Cats.
+22. All late Footmen are royal Gryphons.
+23. All sleepy Cookmaids are tiny Gryphons.
+24. All royal Cheshire Cats are croquet-playing Alice.
+25. All vanishing Lories are royal Cheshire Cats.
+26. No croquet-playing Mock Turtles are grinning Kings of Hearts.
+27. All enormous Lories are grinning Cards.
+28. All curious Cookmaids are royal Eaglets.
+
+What follows?
+
+Answer: No grinning Cookmaids are late Bill the Lizards.

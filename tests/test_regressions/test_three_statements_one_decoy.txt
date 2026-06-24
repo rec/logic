@@ -1,0 +1,11 @@
+The Game of Logic
+
+Premises:
+1. All sleepy Alice are sleepy Mock Turtles.
+2. All weeping Caterpillars are enormous Caterpillars.
+3. No royal Dodos are tiny Cards.
+4. All enormous Caterpillars are royal Dodos.
+
+What follows?
+
+Answer: No weeping Caterpillars are tiny Cards.

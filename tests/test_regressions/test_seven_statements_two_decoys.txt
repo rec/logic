@@ -1,0 +1,16 @@
+The Game of Logic
+
+Premises:
+1. All curious Bill the Lizards are sleepy Hedgehogs.
+2. No vanishing Gryphons are grinning Cookmaids.
+3. All late Kings of Hearts are late Hedgehogs.
+4. All tea-drinking Dormice are croquet-playing Dormice.
+5. All tiny Pigs are vanishing Queens of Hearts.
+6. All croquet-playing Dormice are tiny Pigs.
+7. No sleepy Cards are tea-drinking Dormice.
+8. All late Hedgehogs are Eaglets.
+9. All Eaglets are sleepy Cards.
+
+What follows?
+
+Answer: No late Kings of Hearts are vanishing Queens of Hearts.
