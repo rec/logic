@@ -3,9 +3,12 @@
 """Generate Lewis Carroll-style syllogism puzzles."""
 
 import argparse
+import json
 import random
+import tomllib
 from dataclasses import dataclass
 from itertools import product
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -26,11 +29,28 @@ class Puzzle:
     conclusion: Statement
 
 
-def split_values(values: list[str]) -> list[str]:
-    items: list[str] = []
-    for value in values:
-        items.extend(part.strip() for part in value.split(","))
-    return [item for item in items if item]
+def string_list(data: object, key: str) -> list[str]:
+    if not isinstance(data, dict):
+        raise SystemExit("Terms file must contain an object.")
+    value = data.get(key)
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        raise SystemExit(f"Terms file must contain a list of strings named {key!r}.")
+    terms = [item.strip() for item in value]
+    return [term for term in terms if term]
+
+
+def load_terms(path: Path) -> tuple[list[str], list[str]]:
+    suffix = path.suffix.lower()
+    if suffix == ".json":
+        data = json.loads(path.read_text())
+    elif suffix == ".toml":
+        data = tomllib.loads(path.read_text())
+    else:
+        raise SystemExit("Terms file must be JSON or TOML.")
+
+    nouns = string_list(data, "nouns")
+    adjectives = string_list(data, "adjectives")
+    return nouns, adjectives
 
 
 def build_terms(nouns: list[str], adjectives: list[str]) -> list[str]:
@@ -113,16 +133,10 @@ def parser() -> argparse.ArgumentParser:
         description="Generate a Lewis Carroll-style syllogism puzzle.",
     )
     argument_parser.add_argument(
-        "--noun",
-        action="append",
-        default=[],
-        help="A noun or comma-separated list of nouns.",
-    )
-    argument_parser.add_argument(
-        "--adjective",
-        action="append",
-        default=[],
-        help="An adjectival phrase or comma-separated list of phrases.",
+        "--terms",
+        type=Path,
+        required=True,
+        help="JSON or TOML file containing nouns and adjectives lists.",
     )
     argument_parser.add_argument(
         "--useful",
@@ -146,8 +160,7 @@ def parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = parser().parse_args()
-    nouns = split_values(args.noun)
-    adjectives = split_values(args.adjective)
+    nouns, adjectives = load_terms(args.terms)
 
     if not nouns:
         raise SystemExit("At least one noun is required.")
