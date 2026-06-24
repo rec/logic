@@ -1,24 +1,24 @@
 The Game of Logic
 
 Premises:
-1. All goardabreem wudoosworee are kinflaishurbes wisshamail.
-2. All boalbalbungil wisshamail are ripeemlumzees.
-3. All kinflaishurbes ripeemlumzees are flesbusfloartoaprool ferdeelglusdoarku.
-4. All wudoosworee are goardabreem wudoosworee.
-5. All boalbalbungil wisshamail are goardabreem ripeemlumzees.
-6. All flesbusfloartoaprool wisshamail are ferdeelglusdoarku.
-7. No wisshamail are goardabreem wisshamail.
-8. All kinflaishurbes ferdeelglusdoarku are wisshamail.
-9. All ferdeelglusdoarku are kinflaishurbes ripeemlumzees.
-10. All kinflaishurbes wisshamail are boalbalbungil ripeemlumzees.
-11. All goardabreem ferdeelglusdoarku are kinflaishurbes ferdeelglusdoarku.
-12. All boalbalbungil ripeemlumzees are goardabreem ferdeelglusdoarku.
-13. All flesbusfloartoaprool ferdeelglusdoarku are wudoosworee.
-14. All boalbalbungil ferdeelglusdoarku are kinflaishurbes wudoosworee.
-15. No boalbalbungil ferdeelglusdoarku are flesbusfloartoaprool wisshamail.
-16. All boalbalbungil wudoosworee are boalbalbungil wisshamail.
-17. All goardabreem ripeemlumzees are flesbusfloartoaprool wisshamail.
+1. All goardabreem wudoosworee are kinflaishurbes ripeemlumzees.
+2. All kinflaishurbes ripeemlumzees are boalbalbungil ripeemlumzees.
+3. All boalbalbungil wudoosworee are kinflaishurbes wudoosworee.
+4. All goardabreem wisshamail are goardabreem ferdeelglusdoarku.
+5. All goardabreem wudoosworee are kinflaishurbes wisshamail.
+6. All kinflaishurbes ripeemlumzees are kinflaishurbes wisshamail.
+7. All boalbalbungil wudoosworee are boalbalbungil ripeemlumzees.
+8. All goardabreem wudoosworee are boalbalbungil ripeemlumzees.
+9. All kinflaishurbes wisshamail are boalbalbungil ripeemlumzees.
+10. All boalbalbungil ripeemlumzees are kinflaishurbes wudoosworee.
+11. All boalbalbungil wudoosworee are kinflaishurbes wisshamail.
+12. No flesbusfloartoaprool wudoosworee are wudoosworee.
+13. All boalbalbungil ferdeelglusdoarku are wisshamail.
+14. All goardabreem wudoosworee are boalbalbungil wudoosworee.
+15. All kinflaishurbes wisshamail are kinflaishurbes wudoosworee.
+16. All kinflaishurbes ripeemlumzees are kinflaishurbes wudoosworee.
+17. All boalbalbungil wudoosworee are kinflaishurbes ripeemlumzees.
 
 What follows?
 
-Answer: No boalbalbungil wudoosworee are goardabreem wisshamail.
+Answer: All goardabreem wudoosworee are kinflaishurbes wudoosworee.

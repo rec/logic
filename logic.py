@@ -32,6 +32,13 @@ class Puzzle:
     prompt: str
 
 
+@dataclass(frozen=True)
+class Closure:
+    all_relations: set[tuple[str, str]]
+    no_relations: set[frozenset[str]]
+    empty_terms: set[str]
+
+
 ONSETS = [
     "b",
     "br",
@@ -185,20 +192,62 @@ def build_terms(nouns: list[str], adjectives: list[str]) -> list[str]:
     return terms
 
 
-def make_chain(
+def relation_count(term_count: int) -> int:
+    return term_count * (term_count - 1) // 2
+
+
+def decompose_relation_count(total: int) -> list[int]:
+    counts: list[int] = []
+    remaining = total
+    while remaining > 0:
+        term_count = 2
+        while relation_count(term_count + 1) <= remaining:
+            term_count += 1
+        counts.append(term_count)
+        remaining -= relation_count(term_count)
+    return counts
+
+
+def all_chain_statements(terms: list[str]) -> list[Statement]:
+    return [
+        Statement(terms[left], terms[right], "all")
+        for left in range(len(terms))
+        for right in range(left + 1, len(terms))
+    ]
+
+
+def make_useful_statements(
     terms: list[str],
     useful_count: int,
     rng: random.Random,
 ) -> tuple[list[Statement], Statement]:
-    chosen = rng.sample(terms, useful_count + 1)
-    statements: list[Statement] = []
+    if useful_count == 1:
+        subject, predicate = rng.sample(terms, 2)
+        conclusion = Statement(subject, predicate, "all")
+        return [conclusion], conclusion
 
-    for index in range(useful_count):
-        relation = "no" if index == useful_count - 1 else "all"
-        statements.append(Statement(chosen[index], chosen[index + 1], relation))
+    component_sizes = decompose_relation_count(useful_count + 1)
+    required_terms = sum(component_sizes)
+    chosen = rng.sample(terms, required_terms)
+    useful: list[Statement] = []
+    conclusion: Statement | None = None
+    offset = 0
 
-    conclusion = Statement(chosen[0], chosen[-1], "no")
-    return statements, conclusion
+    for component_index, component_size in enumerate(component_sizes):
+        component_terms = chosen[offset : offset + component_size]
+        offset += component_size
+        statements = all_chain_statements(component_terms)
+        if component_index == 0:
+            conclusion = Statement(component_terms[0], component_terms[-1], "all")
+            statements = [
+                statement for statement in statements if statement != conclusion
+            ]
+        useful.extend(statements)
+
+    if conclusion is None:
+        raise SystemExit("Could not generate a puzzle conclusion.")
+    rng.shuffle(useful)
+    return useful, conclusion
 
 
 def make_decoys(
@@ -211,21 +260,31 @@ def make_decoys(
     if len(available) < decoy_count * 2:
         available = terms[:]
 
+    rng.shuffle(available)
     decoys: list[Statement] = []
-    while len(decoys) < decoy_count:
-        subject, predicate = rng.sample(available, 2)
+    for index in range(decoy_count):
+        subject = available[index * 2]
+        predicate = available[index * 2 + 1]
         relation = rng.choice(["all", "no"])
-        candidate = Statement(subject, predicate, relation)
-        if candidate not in decoys:
-            decoys.append(candidate)
+        decoys.append(Statement(subject, predicate, relation))
     return decoys
 
 
-def term_is_forced_empty(statements: list[Statement], term: str) -> bool:
-    terms = {term}
-    terms.update(statement.subject for statement in statements)
+def required_term_count(useful_count: int, decoy_count: int) -> int:
+    if useful_count == 1:
+        return 2 + decoy_count * 2
+    return sum(decompose_relation_count(useful_count + 1)) + decoy_count * 2
+
+
+def statement_terms(statements: list[Statement]) -> set[str]:
+    terms = {statement.subject for statement in statements}
     terms.update(statement.predicate for statement in statements)
-    reachable = {(item, item) for item in terms}
+    return terms
+
+
+def all_closure(statements: list[Statement]) -> set[tuple[str, str]]:
+    terms = statement_terms(statements)
+    reachable = {(term, term) for term in terms}
     reachable.update(
         (statement.subject, statement.predicate)
         for statement in statements
@@ -245,12 +304,92 @@ def term_is_forced_empty(statements: list[Statement], term: str) -> bool:
             reachable.update(additions)
             changed = True
 
+    return reachable
+
+
+def no_key(subject: str, predicate: str) -> frozenset[str]:
+    return frozenset((subject, predicate))
+
+
+def closure(statements: list[Statement]) -> Closure:
+    reachable = all_closure(statements)
+    no_relations: set[frozenset[str]] = set()
+    for statement in statements:
+        if statement.relation == "no":
+            no_relations.add(no_key(statement.subject, statement.predicate))
+            for left_subject, left_predicate in reachable:
+                for right_subject, right_predicate in reachable:
+                    if (
+                        left_predicate == statement.subject
+                        and right_predicate == statement.predicate
+                    ):
+                        no_relations.add(no_key(left_subject, right_subject))
+                    if (
+                        left_predicate == statement.predicate
+                        and right_predicate == statement.subject
+                    ):
+                        no_relations.add(no_key(left_subject, right_subject))
+
+    empty_terms = {
+        term
+        for term in statement_terms(statements)
+        if any(
+            (term, subject) in reachable and (term, predicate) in reachable
+            for subject, predicate in (
+                tuple(relation) for relation in no_relations if len(relation) == 2
+            )
+        )
+    }
+
+    return Closure(reachable, no_relations, empty_terms)
+
+
+def term_is_forced_empty(statements: list[Statement], term: str) -> bool:
+    return term in closure(statements).empty_terms
+
+
+def conclusion_key(statement: Statement) -> tuple[str, str, str]:
+    if statement.relation == "no":
+        subject, predicate = sorted([statement.subject, statement.predicate])
+        return statement.relation, subject, predicate
+    return statement.relation, statement.subject, statement.predicate
+
+
+def implied_conclusions(statements: list[Statement]) -> set[tuple[str, str, str]]:
+    statement_closure = closure(statements)
+    premise_keys = {conclusion_key(statement) for statement in statements}
+    conclusions: set[tuple[str, str, str]] = set()
+
+    for subject, predicate in statement_closure.all_relations:
+        if subject == predicate or subject in statement_closure.empty_terms:
+            continue
+        key = conclusion_key(Statement(subject, predicate, "all"))
+        if key not in premise_keys:
+            conclusions.add(key)
+
+    for relation in statement_closure.no_relations:
+        if len(relation) != 2:
+            continue
+        subject, predicate = sorted(relation)
+        if (
+            subject in statement_closure.empty_terms
+            or predicate in statement_closure.empty_terms
+        ):
+            continue
+        key = conclusion_key(Statement(subject, predicate, "no"))
+        if key not in premise_keys:
+            conclusions.add(key)
+
+    return conclusions
+
+
+def has_unique_solution(statements: list[Statement], conclusion: Statement) -> bool:
+    conclusions = implied_conclusions(statements)
+    if conclusion in statements:
+        return len(conclusions) == 0
     return any(
-        (term, statement.subject) in reachable
-        and (term, statement.predicate) in reachable
-        for statement in statements
-        if statement.relation == "no"
-    )
+        conclusion_key(conclusion) == key for key in conclusions
+    ) and len(conclusions) == 1
 
 
 def make_puzzle(
@@ -262,27 +401,23 @@ def make_puzzle(
     prompt: str = "",
 ) -> Puzzle:
     terms = build_terms(nouns, adjectives)
-    required_terms = useful_count + 1
+    required_terms = required_term_count(useful_count, decoy_count)
     if len(terms) < required_terms:
         raise SystemExit(f"Need at least {required_terms} distinct terms.")
 
     rng = random.Random(seed)
     for _ in range(1000):
-        useful, conclusion = make_chain(terms, useful_count, rng)
+        useful, conclusion = make_useful_statements(terms, useful_count, rng)
         used_terms = {statement.subject for statement in useful}
         used_terms.update(statement.predicate for statement in useful)
         decoys = make_decoys(terms, used_terms, decoy_count, rng)
 
         statements = [*useful, *decoys]
-        if not term_is_forced_empty(
-            statements,
-            conclusion.subject,
-        ) and not term_is_forced_empty(statements, conclusion.predicate):
+        if has_unique_solution(statements, conclusion):
             rng.shuffle(statements)
             return Puzzle(statements, conclusion, prompt)
 
-    raise SystemExit("Could not generate a non-vacuous puzzle.")
-
+    raise SystemExit("Could not generate a puzzle with a unique solution.")
 
 
 def print_puzzle(puzzle: Puzzle) -> None:

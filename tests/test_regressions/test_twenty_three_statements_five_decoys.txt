@@ -1,35 +1,35 @@
 The Game of Logic
 
 Premises:
-1. All curious Kings of Hearts are weeping Lories.
-2. All weeping Cheshire Cats are sleepy Cookmaids.
-3. All tiny Knaves of Hearts are curious Kings of Hearts.
-4. All late White Rabbits are grinning March Hares.
-5. All tiny Gryphons are curious Alice.
-6. All weeping Lories are vanishing Caterpillars.
-7. All enormous Cheshire Cats are vanishing Mock Turtles.
-8. All late Kings of Hearts are vanishing Dormice.
-9. All croquet-playing Alice are peppery Dormice.
-10. All late Queens of Hearts are vanishing Lories.
-11. All curious Alice are curious Cookmaids.
-12. All royal Eaglets are late Queens of Hearts.
-13. All royal Gryphons are sleepy Dodos.
-14. No grinning Lories are late Bill the Lizards.
-15. All grinning Cards are late Footmen.
-16. All vanishing Caterpillars are Mad Hatters.
-17. All grinning Cookmaids are weeping Cheshire Cats.
-18. All sleepy Cookmaids are tiny Gryphons.
-19. All royal Cheshire Cats are croquet-playing Alice.
-20. All vanishing Lories are royal Cheshire Cats.
-21. All enormous Lories are grinning Cards.
-22. All curious Cookmaids are royal Eaglets.
-23. All peppery Dormice are tiny Knaves of Hearts.
-24. All Mad Hatters are enormous Lories.
-25. All late Footmen are royal Gryphons.
-26. No vanishing March Hares are croquet-playing Cheshire Cats.
-27. All sleepy Dodos are grinning Lories.
-28. All sleepy Knaves of Hearts are croquet-playing Mock Turtles.
+1. All late Queens of Hearts are vanishing Lories.
+2. All weeping Cheshire Cats are royal Eaglets.
+3. All late Queens of Hearts are royal Cheshire Cats.
+4. All grinning Cookmaids are sleepy Cookmaids.
+5. All weeping Cheshire Cats are tiny Gryphons.
+6. All tiny Gryphons are curious Cookmaids.
+7. No weeping Mock Turtles are royal Alice.
+8. All curious Alice are curious Cookmaids.
+9. All weeping Cheshire Cats are curious Alice.
+10. All grinning Cookmaids are curious Alice.
+11. All sleepy Cookmaids are tiny Gryphons.
+12. All tiny Gryphons are curious Alice.
+13. All weeping Duchesses are sleepy Footmen.
+14. All grinning Cookmaids are weeping Cheshire Cats.
+15. All weeping Cheshire Cats are curious Cookmaids.
+16. All grinning Gryphons are royal Footmen.
+17. No croquet-playing Eaglets are peppery Alice.
+18. No tiny Queens of Hearts are Pigs.
+19. All grinning Cookmaids are tiny Gryphons.
+20. All curious Cookmaids are royal Eaglets.
+21. All grinning Cookmaids are curious Cookmaids.
+22. All sleepy Cookmaids are royal Eaglets.
+23. All tiny Gryphons are royal Eaglets.
+24. All curious Alice are royal Eaglets.
+25. All sleepy Cookmaids are curious Cookmaids.
+26. All sleepy Cookmaids are curious Alice.
+27. All vanishing Lories are royal Cheshire Cats.
+28. All weeping Cheshire Cats are sleepy Cookmaids.
 
 What follows?
 
-Answer: No grinning Cookmaids are late Bill the Lizards.
+Answer: All grinning Cookmaids are royal Eaglets.

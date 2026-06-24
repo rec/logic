@@ -1,16 +1,16 @@
 The Game of Logic
 
 Premises:
-1. All tea-drinking Dormice are croquet-playing Dormice.
-2. All late Hedgehogs are Eaglets.
-3. All sleepy Duchesses are vanishing Gryphons.
-4. All sleepy Cards are tea-drinking Dormice.
-5. All late Kings of Hearts are late Hedgehogs.
-6. No tiny Pigs are vanishing Queens of Hearts.
-7. All croquet-playing Dormice are tiny Pigs.
-8. All Eaglets are sleepy Cards.
-9. No tiny Dormice are curious Bill the Lizards.
+1. All late Hedgehogs are Eaglets.
+2. All tea-drinking Dormice are croquet-playing Dormice.
+3. All Eaglets are sleepy Cards.
+4. All tiny Pigs are vanishing Queens of Hearts.
+5. All grinning Dodos are peppery Lories.
+6. All late Hedgehogs are sleepy Cards.
+7. No peppery Alice are late Cards.
+8. All late Kings of Hearts are late Hedgehogs.
+9. All late Kings of Hearts are Eaglets.
 
 What follows?
 
-Answer: No late Kings of Hearts are vanishing Queens of Hearts.
+Answer: All late Kings of Hearts are sleepy Cards.

@@ -72,17 +72,39 @@ class LogicTests(unittest.TestCase):
         self.assertEqual(len(nouns), 4)
         self.assertEqual(len(adjectives), 4)
 
-    def test_negative_statement_ends_useful_chain(self) -> None:
+    def test_useful_statements_have_one_unstated_solution(self) -> None:
         terms = ["a", "b", "c", "d"]
-        statements, conclusion = logic.make_chain(terms, 3, random.Random(0))
-
-        self.assertEqual(
-            [statement.relation for statement in statements],
-            ["all", "all", "no"],
+        statements, conclusion = logic.make_useful_statements(
+            terms,
+            2,
+            random.Random(0),
         )
-        self.assertEqual(conclusion.relation, "no")
-        self.assertEqual(conclusion.subject, statements[0].subject)
-        self.assertEqual(conclusion.predicate, statements[-1].predicate)
+
+        self.assertEqual(len(statements), 2)
+        self.assertEqual(conclusion.relation, "all")
+        self.assertTrue(logic.has_unique_solution(statements, conclusion))
+
+    def test_detects_multiple_solutions(self) -> None:
+        statements = [
+            logic.Statement("a", "b", "all"),
+            logic.Statement("b", "c", "all"),
+            logic.Statement("c", "d", "all"),
+        ]
+
+        self.assertFalse(
+            logic.has_unique_solution(statements, logic.Statement("a", "d", "all"))
+        )
+
+    def test_generated_puzzle_has_unique_solution(self) -> None:
+        puzzle = logic.make_puzzle(
+            ["a", "b", "c", "d"],
+            ["e", "f", "g", "h"],
+            14,
+            3,
+            seed=1403,
+        )
+
+        self.assertTrue(logic.has_unique_solution(puzzle.statements, puzzle.conclusion))
 
     def test_detects_vacuous_conclusion_subject(self) -> None:
         statements = [

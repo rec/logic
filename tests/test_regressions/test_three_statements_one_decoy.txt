@@ -1,11 +1,11 @@
 The Game of Logic
 
 Premises:
-1. All sleepy Alice are sleepy Mock Turtles.
-2. All weeping Caterpillars are enormous Caterpillars.
-3. No royal Dodos are tiny Cards.
-4. All enormous Caterpillars are royal Dodos.
+1. All tiny Cards are sleepy Alice.
+2. All enormous Caterpillars are royal Dodos.
+3. All weeping Caterpillars are enormous Caterpillars.
+4. All croquet-playing Cheshire Cats are weeping Cookmaids.
 
 What follows?
 
-Answer: No weeping Caterpillars are tiny Cards.
+Answer: All weeping Caterpillars are royal Dodos.
