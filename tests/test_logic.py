@@ -108,6 +108,8 @@ class LogicTests(unittest.TestCase):
 
         self.assertEqual(args.useful, 14)
         self.assertEqual(args.decoy, 3)
+        self.assertEqual(args.min_syllables, 2)
+        self.assertEqual(args.max_syllables, 4)
 
 
 if __name__ == "__main__":

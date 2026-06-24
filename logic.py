@@ -249,13 +249,13 @@ def parser() -> argparse.ArgumentParser:
     argument_parser.add_argument(
         "--min-syllables",
         type=int,
-        default=3,
+        default=2,
         help="Minimum syllables for generated random words.",
     )
     argument_parser.add_argument(
         "--max-syllables",
         type=int,
-        default=5,
+        default=4,
         help="Maximum syllables for generated random words.",
     )
     argument_parser.add_argument(
