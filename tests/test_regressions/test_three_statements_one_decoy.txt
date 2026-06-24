@@ -6,7 +6,6 @@ Premises:
 3. All weeping Caterpillars are enormous Caterpillars.
 4. All croquet-playing Cheshire Cats are weeping Cookmaids.
 
-What new statement follows?
-Do not repeat a premise.
+What follows?
 
 Answer: All weeping Caterpillars are royal Dodos.

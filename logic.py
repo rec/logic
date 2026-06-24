@@ -433,8 +433,7 @@ def print_puzzle(puzzle: Puzzle) -> None:
     for index, statement in enumerate(puzzle.statements, start=1):
         print(f"{index}. {statement.text()}")
     print()
-    print("What new statement follows?")
-    print("Do not repeat a premise.")
+    print("What follows?")
     print()
     print(f"Answer: {puzzle.conclusion.text()}")
 

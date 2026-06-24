@@ -151,10 +151,7 @@ class LogicTests(unittest.TestCase):
             logic.print_puzzle(puzzle)
 
         self.assertIn("Read atomically.\n\nPremises:", output.getvalue())
-        self.assertIn(
-            "\nWhat new statement follows?\nDo not repeat a premise.\n",
-            output.getvalue(),
-        )
+        self.assertIn("\nWhat follows?\n", output.getvalue())
 
     def test_parser_defaults_to_fourteen_useful_and_three_decoys(self) -> None:
         args = logic.parser().parse_args([])

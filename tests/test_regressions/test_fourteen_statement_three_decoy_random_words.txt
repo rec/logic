@@ -19,7 +19,6 @@ Premises:
 16. All kinflaishurbes ripeemlumzees are kinflaishurbes wudoosworee.
 17. All boalbalbungil wudoosworee are kinflaishurbes ripeemlumzees.
 
-What new statement follows?
-Do not repeat a premise.
+What follows?
 
 Answer: All goardabreem wudoosworee are kinflaishurbes wudoosworee.
