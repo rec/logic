@@ -1,4 +1,5 @@
 import io
+import random
 from contextlib import redirect_stdout
 
 import logic
@@ -76,3 +77,9 @@ def test_seven_statements_two_decoys(file_regression: FileRegressionFixture) -> 
 
 def test_twenty_three_statements_five_decoys(file_regression: FileRegressionFixture) -> None:
     file_regression.check(render_puzzle(23, 5), extension=".txt")
+
+
+def test_random_names(file_regression: FileRegressionFixture) -> None:
+    rng = random.Random(8675309)
+    names = [logic.random_name(5, 8, rng) for _ in range(20)]
+    file_regression.check("\n".join(names) + "\n", extension=".txt")

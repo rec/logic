@@ -29,6 +29,68 @@ class Puzzle:
     conclusion: Statement
 
 
+ONSETS = [
+    "b",
+    "br",
+    "d",
+    "f",
+    "fl",
+    "g",
+    "gl",
+    "h",
+    "k",
+    "l",
+    "m",
+    "n",
+    "p",
+    "pr",
+    "r",
+    "s",
+    "sh",
+    "t",
+    "tr",
+    "v",
+    "w",
+    "z",
+]
+
+NUCLEI = [
+    "a",
+    "e",
+    "i",
+    "o",
+    "u",
+    "ai",
+    "ee",
+    "oa",
+    "oo",
+]
+
+CODAS = [
+    "",
+    "",
+    "",
+    "l",
+    "m",
+    "n",
+    "r",
+    "s",
+]
+
+
+def random_name(min_syllables: int, max_syllables: int, rng: random.Random) -> str:
+    if min_syllables < 1:
+        raise ValueError("min_syllables must be at least 1.")
+    if max_syllables < min_syllables:
+        raise ValueError("max_syllables must be at least min_syllables.")
+
+    syllables = [
+        f"{rng.choice(ONSETS)}{rng.choice(NUCLEI)}{rng.choice(CODAS)}"
+        for _ in range(rng.randint(min_syllables, max_syllables))
+    ]
+    return "".join(syllables).capitalize()
+
+
 def string_list(data: object, key: str) -> list[str]:
     if not isinstance(data, dict):
         raise SystemExit("Terms file must contain an object.")
