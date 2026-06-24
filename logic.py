@@ -115,6 +115,42 @@ def load_terms(path: Path) -> tuple[list[str], list[str]]:
     return nouns, adjectives
 
 
+def default_term_count(useful_count: int, decoy_count: int) -> int:
+    return max(1, (useful_count + decoy_count) // 4)
+
+
+def random_words(
+    count: int,
+    min_syllables: int,
+    max_syllables: int,
+    rng: random.Random,
+) -> list[str]:
+    if count < 1:
+        raise ValueError("count must be at least 1.")
+
+    words: list[str] = []
+    seen: set[str] = set()
+    while len(words) < count:
+        word = random_word(min_syllables, max_syllables, rng)
+        if word not in seen:
+            seen.add(word)
+            words.append(word)
+    return words
+
+
+def terms_from_args(args: argparse.Namespace) -> tuple[list[str], list[str]]:
+    if args.terms is not None:
+        return load_terms(args.terms)
+
+    count = default_term_count(args.useful, args.decoy)
+    noun_count = args.noun_count if args.noun_count is not None else count
+    adjective_count = args.adjective_count if args.adjective_count is not None else count
+    rng = random.Random(args.seed)
+    nouns = random_words(noun_count, args.min_syllables, args.max_syllables, rng)
+    adjectives = random_words(adjective_count, args.min_syllables, args.max_syllables, rng)
+    return nouns, adjectives
+
+
 def build_terms(nouns: list[str], adjectives: list[str]) -> list[str]:
     terms = list(nouns)
     terms.extend(f"{adjective} {noun}" for adjective, noun in product(adjectives, nouns))
@@ -197,8 +233,29 @@ def parser() -> argparse.ArgumentParser:
     argument_parser.add_argument(
         "--terms",
         type=Path,
-        required=True,
         help="JSON or TOML file containing nouns and adjectives lists.",
+    )
+    argument_parser.add_argument(
+        "--min-syllables",
+        type=int,
+        default=3,
+        help="Minimum syllables for generated random words.",
+    )
+    argument_parser.add_argument(
+        "--max-syllables",
+        type=int,
+        default=5,
+        help="Maximum syllables for generated random words.",
+    )
+    argument_parser.add_argument(
+        "--noun-count",
+        type=int,
+        help="Number of random nouns to generate when --terms is omitted.",
+    )
+    argument_parser.add_argument(
+        "--adjective-count",
+        type=int,
+        help="Number of random adjectives to generate when --terms is omitted.",
     )
     argument_parser.add_argument(
         "--useful",
@@ -222,17 +279,25 @@ def parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = parser().parse_args()
-    nouns, adjectives = load_terms(args.terms)
 
-    if not nouns:
-        raise SystemExit("At least one noun is required.")
-    if not adjectives:
-        raise SystemExit("At least one adjectival phrase is required.")
     if args.useful < 1:
         raise SystemExit("--useful must be at least 1.")
     if args.decoy < 0:
         raise SystemExit("--decoy cannot be negative.")
+    if args.min_syllables < 1:
+        raise SystemExit("--min-syllables must be at least 1.")
+    if args.max_syllables < args.min_syllables:
+        raise SystemExit("--max-syllables must be at least --min-syllables.")
+    if args.noun_count is not None and args.noun_count < 1:
+        raise SystemExit("--noun-count must be at least 1.")
+    if args.adjective_count is not None and args.adjective_count < 1:
+        raise SystemExit("--adjective-count must be at least 1.")
 
+    nouns, adjectives = terms_from_args(args)
+    if not nouns:
+        raise SystemExit("At least one noun is required.")
+    if not adjectives:
+        raise SystemExit("At least one adjectival phrase is required.")
     puzzle = make_puzzle(nouns, adjectives, args.useful, args.decoy, args.seed)
     print_puzzle(puzzle)
 

@@ -63,6 +63,24 @@ def render_puzzle(useful_count: int, decoy_count: int) -> str:
     return output.getvalue()
 
 
+def render_random_puzzle(useful_count: int, decoy_count: int) -> str:
+    rng = random.Random(useful_count * 100 + decoy_count)
+    count = logic.default_term_count(useful_count, decoy_count)
+    nouns = logic.random_words(count, 3, 5, rng)
+    adjectives = logic.random_words(count, 3, 5, rng)
+    puzzle = logic.make_puzzle(
+        nouns,
+        adjectives,
+        useful_count,
+        decoy_count,
+        seed=useful_count * 100 + decoy_count,
+    )
+    output = io.StringIO()
+    with redirect_stdout(output):
+        logic.print_puzzle(puzzle)
+    return output.getvalue()
+
+
 def test_one_statement_no_decoys(file_regression: FileRegressionFixture) -> None:
     file_regression.check(render_puzzle(1, 0), extension=".txt")
 
@@ -83,3 +101,7 @@ def test_random_words(file_regression: FileRegressionFixture) -> None:
     rng = random.Random(8675309)
     words = [logic.random_word(5, 8, rng) for _ in range(20)]
     file_regression.check("\n".join(words) + "\n", extension=".txt")
+
+
+def test_seventeen_statement_random_words(file_regression: FileRegressionFixture) -> None:
+    file_regression.check(render_random_puzzle(17, 0), extension=".txt")
