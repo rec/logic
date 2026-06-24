@@ -6,9 +6,11 @@ import argparse
 import json
 import random
 import tomllib
+from collections.abc import Mapping
 from dataclasses import dataclass
 from itertools import product
 from pathlib import Path
+from typing import cast
 
 
 @dataclass(frozen=True)
@@ -93,12 +95,19 @@ def random_word(min_syllables: int, max_syllables: int, rng: random.Random) -> s
 
 
 def string_list(data: object, key: str) -> list[str]:
-    if not isinstance(data, dict):
+    if not isinstance(data, Mapping):
         raise SystemExit("Terms file must contain an object.")
-    value = data.get(key)
-    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+    terms_data = cast(Mapping[str, object], data)
+    value = terms_data.get(key)
+    if not isinstance(value, list):
         raise SystemExit(f"Terms file must contain a list of strings named {key!r}.")
-    terms = [item.strip() for item in value]
+    terms: list[str] = []
+    for item in value:
+        if not isinstance(item, str):
+            raise SystemExit(
+                f"Terms file must contain a list of strings named {key!r}."
+            )
+        terms.append(item.strip())
     return [term for term in terms if term]
 
 
@@ -145,10 +154,17 @@ def terms_from_args(args: argparse.Namespace) -> tuple[list[str], list[str]]:
 
     count = default_term_count(args.useful, args.decoy)
     noun_count = args.noun_count if args.noun_count is not None else count
-    adjective_count = args.adjective_count if args.adjective_count is not None else count
+    adjective_count = (
+        args.adjective_count if args.adjective_count is not None else count
+    )
     rng = random.Random(args.seed)
     nouns = random_words(noun_count, args.min_syllables, args.max_syllables, rng)
-    adjectives = random_words(adjective_count, args.min_syllables, args.max_syllables, rng)
+    adjectives = random_words(
+        adjective_count,
+        args.min_syllables,
+        args.max_syllables,
+        rng,
+    )
     return nouns, adjectives
 
 
@@ -156,17 +172,24 @@ def default_prompt(nouns: list[str], adjectives: list[str]) -> str:
     example = f"{adjectives[0]} {nouns[0]}"
     return (
         "Treat each two-word phrase as a single, atomic variable "
-        f"(e.g., treat {example!r} as an indivisible token, not an intersection of two terms)."
+        f"(e.g., treat {example!r} as an indivisible token, "
+        "not an intersection of two terms)."
     )
 
 
 def build_terms(nouns: list[str], adjectives: list[str]) -> list[str]:
     terms = list(nouns)
-    terms.extend(f"{adjective} {noun}" for adjective, noun in product(adjectives, nouns))
+    terms.extend(
+        f"{adjective} {noun}" for adjective, noun in product(adjectives, nouns)
+    )
     return terms
 
 
-def make_chain(terms: list[str], useful_count: int, rng: random.Random) -> tuple[list[Statement], Statement]:
+def make_chain(
+    terms: list[str],
+    useful_count: int,
+    rng: random.Random,
+) -> tuple[list[Statement], Statement]:
     chosen = rng.sample(terms, useful_count + 1)
     statements: list[Statement] = []
 
@@ -198,6 +221,38 @@ def make_decoys(
     return decoys
 
 
+def term_is_forced_empty(statements: list[Statement], term: str) -> bool:
+    terms = {term}
+    terms.update(statement.subject for statement in statements)
+    terms.update(statement.predicate for statement in statements)
+    reachable = {(item, item) for item in terms}
+    reachable.update(
+        (statement.subject, statement.predicate)
+        for statement in statements
+        if statement.relation == "all"
+    )
+
+    changed = True
+    while changed:
+        changed = False
+        additions = {
+            (left, right_next)
+            for left, right in reachable
+            for left_next, right_next in reachable
+            if right == left_next and (left, right_next) not in reachable
+        }
+        if additions:
+            reachable.update(additions)
+            changed = True
+
+    return any(
+        (term, statement.subject) in reachable
+        and (term, statement.predicate) in reachable
+        for statement in statements
+        if statement.relation == "no"
+    )
+
+
 def make_puzzle(
     nouns: list[str],
     adjectives: list[str],
@@ -212,14 +267,22 @@ def make_puzzle(
         raise SystemExit(f"Need at least {required_terms} distinct terms.")
 
     rng = random.Random(seed)
-    useful, conclusion = make_chain(terms, useful_count, rng)
-    used_terms = {statement.subject for statement in useful}
-    used_terms.update(statement.predicate for statement in useful)
-    decoys = make_decoys(terms, used_terms, decoy_count, rng)
+    for _ in range(1000):
+        useful, conclusion = make_chain(terms, useful_count, rng)
+        used_terms = {statement.subject for statement in useful}
+        used_terms.update(statement.predicate for statement in useful)
+        decoys = make_decoys(terms, used_terms, decoy_count, rng)
 
-    statements = [*useful, *decoys]
-    rng.shuffle(statements)
-    return Puzzle(statements, conclusion, prompt)
+        statements = [*useful, *decoys]
+        if not term_is_forced_empty(
+            statements,
+            conclusion.subject,
+        ) and not term_is_forced_empty(statements, conclusion.predicate):
+            rng.shuffle(statements)
+            return Puzzle(statements, conclusion, prompt)
+
+    raise SystemExit("Could not generate a non-vacuous puzzle.")
+
 
 
 def print_puzzle(puzzle: Puzzle) -> None:

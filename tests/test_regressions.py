@@ -2,9 +2,9 @@ import io
 import random
 from contextlib import redirect_stdout
 
-import logic
 from pytest_regressions.file_regression import FileRegressionFixture
 
+import logic
 
 NOUNS = [
     "Alice",
@@ -93,7 +93,9 @@ def test_seven_statements_two_decoys(file_regression: FileRegressionFixture) -> 
     file_regression.check(render_puzzle(7, 2), extension=".txt")
 
 
-def test_twenty_three_statements_five_decoys(file_regression: FileRegressionFixture) -> None:
+def test_twenty_three_statements_five_decoys(
+    file_regression: FileRegressionFixture,
+) -> None:
     file_regression.check(render_puzzle(23, 5), extension=".txt")
 
 
@@ -103,5 +105,7 @@ def test_random_words(file_regression: FileRegressionFixture) -> None:
     file_regression.check("\n".join(words) + "\n", extension=".txt")
 
 
-def test_fourteen_statement_three_decoy_random_words(file_regression: FileRegressionFixture) -> None:
+def test_fourteen_statement_three_decoy_random_words(
+    file_regression: FileRegressionFixture,
+) -> None:
     file_regression.check(render_random_puzzle(14, 3), extension=".txt")

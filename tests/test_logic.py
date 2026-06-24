@@ -76,10 +76,27 @@ class LogicTests(unittest.TestCase):
         terms = ["a", "b", "c", "d"]
         statements, conclusion = logic.make_chain(terms, 3, random.Random(0))
 
-        self.assertEqual([statement.relation for statement in statements], ["all", "all", "no"])
+        self.assertEqual(
+            [statement.relation for statement in statements],
+            ["all", "all", "no"],
+        )
         self.assertEqual(conclusion.relation, "no")
         self.assertEqual(conclusion.subject, statements[0].subject)
         self.assertEqual(conclusion.predicate, statements[-1].predicate)
+
+    def test_detects_vacuous_conclusion_subject(self) -> None:
+        statements = [
+            logic.Statement("pairusfaroa", "rooloor", "all"),
+            logic.Statement("pairusfaroa", "rooloor", "no"),
+            logic.Statement("pairusfaroa", "preltre pairusfaroa", "all"),
+            logic.Statement("goadin pairusfaroa", "goadin rooloor", "all"),
+            logic.Statement("goadin rooloor", "preltre pairusfaroa", "all"),
+            logic.Statement("preltre rooloor", "pairusfaroa", "all"),
+            logic.Statement("preltre rooloor", "preltre pairusfaroa", "no"),
+            logic.Statement("preltre pairusfaroa", "preltre rooloor", "all"),
+        ]
+
+        self.assertTrue(logic.term_is_forced_empty(statements, "goadin pairusfaroa"))
 
     def test_default_prompt_uses_first_generated_phrase(self) -> None:
         prompt = logic.default_prompt(["hatter"], ["mad"])
@@ -87,7 +104,8 @@ class LogicTests(unittest.TestCase):
         self.assertEqual(
             prompt,
             "Treat each two-word phrase as a single, atomic variable "
-            "(e.g., treat 'mad hatter' as an indivisible token, not an intersection of two terms).",
+            "(e.g., treat 'mad hatter' as an indivisible token, "
+            "not an intersection of two terms).",
         )
 
     def test_print_puzzle_includes_prompt(self) -> None:
