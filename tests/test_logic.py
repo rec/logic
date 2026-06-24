@@ -95,6 +95,15 @@ class LogicTests(unittest.TestCase):
             logic.has_unique_solution(statements, logic.Statement("a", "d", "all"))
         )
 
+    def test_rejects_repeated_premise_as_solution(self) -> None:
+        statement = logic.Statement("a", "b", "all")
+
+        self.assertFalse(logic.has_unique_solution([statement], statement))
+
+    def test_rejects_one_useful_statement_puzzles(self) -> None:
+        with self.assertRaises(SystemExit):
+            logic.make_puzzle(["a"], ["b"], 1, 0, seed=100)
+
     def test_generated_puzzle_has_unique_solution(self) -> None:
         puzzle = logic.make_puzzle(
             ["a", "b", "c", "d"],
@@ -142,6 +151,10 @@ class LogicTests(unittest.TestCase):
             logic.print_puzzle(puzzle)
 
         self.assertIn("Read atomically.\n\nPremises:", output.getvalue())
+        self.assertIn(
+            "\nWhat new statement follows?\nDo not repeat a premise.\n",
+            output.getvalue(),
+        )
 
     def test_parser_defaults_to_fourteen_useful_and_three_decoys(self) -> None:
         args = logic.parser().parse_args([])

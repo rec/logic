@@ -1,8 +1,0 @@
-The Game of Logic
-
-Premises:
-1. All grinning Mad Hatters are tiny Cards.
-
-What follows?
-
-Answer: All grinning Mad Hatters are tiny Cards.

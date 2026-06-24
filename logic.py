@@ -386,7 +386,7 @@ def implied_conclusions(statements: list[Statement]) -> set[tuple[str, str, str]
 def has_unique_solution(statements: list[Statement], conclusion: Statement) -> bool:
     conclusions = implied_conclusions(statements)
     if conclusion in statements:
-        return len(conclusions) == 0
+        return False
     return any(
         conclusion_key(conclusion) == key for key in conclusions
     ) and len(conclusions) == 1
@@ -400,6 +400,9 @@ def make_puzzle(
     seed: int | None,
     prompt: str = "",
 ) -> Puzzle:
+    if useful_count < 2:
+        raise SystemExit("Need at least 2 useful statements for a new conclusion.")
+
     terms = build_terms(nouns, adjectives)
     required_terms = required_term_count(useful_count, decoy_count)
     if len(terms) < required_terms:
@@ -430,7 +433,8 @@ def print_puzzle(puzzle: Puzzle) -> None:
     for index, statement in enumerate(puzzle.statements, start=1):
         print(f"{index}. {statement.text()}")
     print()
-    print("What follows?")
+    print("What new statement follows?")
+    print("Do not repeat a premise.")
     print()
     print(f"Answer: {puzzle.conclusion.text()}")
 
@@ -494,8 +498,8 @@ def parser() -> argparse.ArgumentParser:
 def main() -> None:
     args = parser().parse_args()
 
-    if args.useful < 1:
-        raise SystemExit("--useful must be at least 1.")
+    if args.useful < 2:
+        raise SystemExit("--useful must be at least 2.")
     if args.decoy < 0:
         raise SystemExit("--decoy cannot be negative.")
     if args.min_syllables < 1:

@@ -30,6 +30,7 @@ Premises:
 27. All vanishing Lories are royal Cheshire Cats.
 28. All weeping Cheshire Cats are sleepy Cookmaids.
 
-What follows?
+What new statement follows?
+Do not repeat a premise.
 
 Answer: All grinning Cookmaids are royal Eaglets.

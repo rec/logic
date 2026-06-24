@@ -11,6 +11,7 @@ Premises:
 8. All late Kings of Hearts are late Hedgehogs.
 9. All late Kings of Hearts are Eaglets.
 
-What follows?
+What new statement follows?
+Do not repeat a premise.
 
 Answer: All late Kings of Hearts are sleepy Cards.

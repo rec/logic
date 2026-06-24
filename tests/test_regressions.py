@@ -81,10 +81,6 @@ def render_random_puzzle(useful_count: int, decoy_count: int) -> str:
     return output.getvalue()
 
 
-def test_one_statement_no_decoys(file_regression: FileRegressionFixture) -> None:
-    file_regression.check(render_puzzle(1, 0), extension=".txt")
-
-
 def test_three_statements_one_decoy(file_regression: FileRegressionFixture) -> None:
     file_regression.check(render_puzzle(3, 1), extension=".txt")
 
